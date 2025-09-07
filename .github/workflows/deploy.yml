@@ -1,0 +1,32 @@
+name: Build and Deploy GitHub Stats
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: "0 */12 * * *" # cada 12 horas
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Deploy with PAT
+        run: |
+          echo "Deploy done, ready to serve stats"
+        env:
+          PAT_1: ${{ secrets.PAT_1 }}
